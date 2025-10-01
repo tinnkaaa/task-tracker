@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block title%}Всі задачі{% endblock %}
+{% block content %}
+<h1 class="mb-3">Всі задачі</h1>
+<a href="#" class="btn btn-success mb-3">➕ Створити задачу</a>
+<div class="row">
+    {% for task in tasks %}
+        <div class="col-md-4 mb-3">
+            <div class="card shadow-sm" style="width: 18rem;">
+                <div class="card-body">
+                    <h5 class="card-title">{{ task.name }}</h5>
+                    <p class="card-text text-muted">{{ task.description|truncatewords:20 }}</p>
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item"><b>Статус:</b> {{ task.status }}</li>
+                    <li class="list-group-item"><b>Пріоритет:</b> {{ task.priority }}</li>
+                    <li class="list-group-item"><b>Дедлайн:</b> {{ task.due_date|date:"d M Y" }}</li>
+                    <li class="list-group-item"><b>Створено:</b> {{ task.created_at|date:"d M Y" }}</li>
+                </ul>
+                <div class="card-footer text-center">
+                    <a href="#" class="btn btn-primary btn-sm">Деталі</a>
+                </div>
+            </div>
+        </div>
+    {% empty %}
+        <p>Задач поки немає</p>
+    {% endfor %}
+</div>
+{% endblock %}
