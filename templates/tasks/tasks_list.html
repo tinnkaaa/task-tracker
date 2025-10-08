@@ -1,29 +1,67 @@
 {% extends 'base.html' %}
-{% block title%}Всі задачі{% endblock %}
+{% block title %}Всі задачі{% endblock %}
+
 {% block content %}
-<h1 class="mb-3">Всі задачі</h1>
-<a href="#" class="btn btn-success mb-3">➕ Створити задачу</a>
-<div class="row">
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="mb-0">📋 Всі задачі</h1>
+    <a href="{% url 'task-create' %}" class="btn btn-success">➕ Нова задача</a>
+</div>
+
+<div class="row g-3">
     {% for task in tasks %}
-        <div class="col-md-4 mb-3">
-            <div class="card shadow-sm" style="width: 18rem;">
+        <div class="col-md-4">
+            <div class="card shadow border-0 h-100">
                 <div class="card-body">
-                    <h5 class="card-title">{{ task.name }}</h5>
-                    <p class="card-text text-muted">{{ task.description|truncatewords:20 }}</p>
+                    <h5 class="card-title fw-bold">{{ task.title }}</h5>
+
+                    <!-- ✅ Чекбокс для відмітки виконаної задачі -->
+                    <form method="post" action="{% url 'task-complete' task.id %}">
+                        {% csrf_token %}
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="checkbox"
+                                   id="task-{{ task.id }}"
+                                   name="is_completed"
+                                   onchange="this.form.submit()"
+                                   {% if task.is_completed %}checked{% endif %}>
+                            <label class="form-check-label" for="task-{{ task.id }}">
+                                Завершено
+                            </label>
+                        </div>
+                    </form>
+
+                    <p class="card-text text-muted small">{{ task.description|truncatewords:15 }}</p>
+
+                    <div class="mb-2">
+                        <span class="badge
+                            {% if task.status == 'done' %}bg-success
+                            {% elif task.status == 'in_progress' %}bg-warning text-dark
+                            {% else %}bg-secondary
+                            {% endif %}">
+                            {{ task.get_status_display }}
+                        </span>
+
+                        <span class="badge
+                            {% if task.priority == 'high' %}bg-danger
+                            {% elif task.priority == 'medium' %}bg-primary
+                            {% else %}bg-info text-dark
+                            {% endif %}">
+                            🔥 {{ task.get_priority_display }}
+                        </span>
+                    </div>
+
+                    <small class="text-muted d-block">📅 Дедлайн: {{ task.due_date|date:"d M Y" }}</small>
+                    <small class="text-muted">🕒 Створено: {{ task.created_at|date:"d M Y" }}</small>
                 </div>
-                <ul class="list-group list-group-flush">
-                    <li class="list-group-item"><b>Статус:</b> {{ task.status }}</li>
-                    <li class="list-group-item"><b>Пріоритет:</b> {{ task.priority }}</li>
-                    <li class="list-group-item"><b>Дедлайн:</b> {{ task.due_date|date:"d M Y" }}</li>
-                    <li class="list-group-item"><b>Створено:</b> {{ task.created_at|date:"d M Y" }}</li>
-                </ul>
-                <div class="card-footer text-center">
-                    <a href="#" class="btn btn-primary btn-sm">Деталі</a>
+
+                <div class="card-footer bg-white border-0 text-center">
+                    <a href="{% url 'task-detail' task.id %}" class="btn btn-outline-primary btn-sm">🔎 Деталі</a>
+                    <a href="#" class="btn btn-outline-secondary btn-sm">✏ Редагувати</a>
+                    <a href="#" class="btn btn-outline-danger btn-sm">🗑 Видалити</a>
                 </div>
             </div>
         </div>
     {% empty %}
-        <p>Задач поки немає</p>
+        <p class="text-muted">Немає жодної задачі. Додай першу! 🚀</p>
     {% endfor %}
 </div>
 {% endblock %}

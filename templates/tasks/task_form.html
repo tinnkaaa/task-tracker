@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block title %}➕ Нова задача{% endblock %}
+
+{% block content %}
+
+<form method="post" class="card shadow p-4">
+    {% csrf_token %}
+
+    <div class="mb-3">
+        <label for="{{ form.title.id_for_label }}" class="form-label fw-bold">Назва задачі</label>
+        {{ form.title }}
+        {% if form.title.errors %}
+            <div class="text-danger small mt-1">{{ form.title.errors }}</div>
+        {% endif %}
+    </div>
+
+    <div class="mb-3">
+        <label for="{{ form.description.id_for_label }}" class="form-label fw-bold">Опис</label>
+        {{ form.description }}
+        {% if form.description.errors %}
+            <div class="text-danger small mt-1">{{ form.description.errors }}</div>
+        {% endif %}
+    </div>
+
+    <div class="mb-3">
+        <label for="{{ form.due_date.id_for_label }}" class="form-label fw-bold">Дедлайн</label>
+        {{ form.due_date }}
+        {% if form.due_date.errors %}
+            <div class="text-danger small mt-1">{{ form.due_date.errors }}</div>
+        {% endif %}
+    </div>
+
+    <div class="mb-3">
+        <label for="{{ form.priority.id_for_label }}" class="form-label fw-bold">Пріоритет</label>
+        {{ form.priority }}
+        {% if form.priority.errors %}
+            <div class="text-danger small mt-1">{{ form.priority.errors }}</div>
+        {% endif %}
+    </div>
+
+    <div class="form-check mb-3">
+        {{ form.is_completed }}
+        <label for="{{ form.is_completed.id_for_label }}" class="form-check-label fw-bold">Виконано</label>
+    </div>
+
+    <div class="d-flex justify-content-end mt-4">
+        <button type="submit" class="btn btn-success me-2">💾 Зберегти</button>
+        <a href="{% url 'task-list' %}" class="btn btn-outline-secondary">❌ Відміна</a>
+    </div>
+</form>
+{% endblock %}

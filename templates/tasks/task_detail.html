@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% block title %}{{ task.title }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card shadow-lg border-0">
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center">
+                <h2 class="fw-bold mb-0">{{ task.title }}</h2>
+
+                <form method="post" action="{% url 'task-complete' task.id %}">
+                    {% csrf_token %}
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" 
+                               id="task-{{ task.id }}" 
+                               name="is_completed"
+                               onchange="this.form.submit()" 
+                               {% if task.is_completed %}checked{% endif %}>
+                        <label class="form-check-label fw-semibold" for="task-{{ task.id }}">
+                            ✅ Завершено
+                        </label>
+                    </div>
+                </form>
+            </div>
+
+            <hr>
+
+            <p class="lead text-muted">{{ task.description }}</p>
+
+            <div class="mb-3">
+                <span class="badge 
+                    {% if task.status == 'Виконано' %}
+                        bg-success
+                    {% elif task.status == 'В процесі' %}
+                        bg-warning text-dark
+                    {% else %}
+                        bg-secondary
+                    {% endif %}
+                ">
+                    {{ task.status }}
+                </span>
+
+                <span class="badge 
+                    {% if task.priority == 'Високий' %}
+                        bg-danger
+                    {% elif task.priority == 'Середній' %}
+                        bg-primary
+                    {% else %}
+                        bg-info text-dark
+                    {% endif %}
+                ">
+                    🔥 {{ task.priority }}
+                </span>
+            </div>
+
+            <p class="mb-1"><b>📅 Дедлайн:</b> {{ task.due_date|date:"d M Y" }}</p>
+            <p class="mb-1"><b>🕒 Створено:</b> {{ task.created_at|date:"d M Y H:i" }}</p>
+            <p class="mb-3"><b>👤 Виконавець:</b> {{ task.assignee|default:"Не призначено" }}</p>
+
+            <div class="d-flex gap-2">
+                <a href="#" class="btn btn-outline-secondary">✏ Редагувати</a>
+                <a href="#" class="btn btn-outline-danger">🗑 Видалити</a>
+                <a href="{% url 'task-list' %}" class="btn btn-outline-dark">⬅ Назад до списку</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
