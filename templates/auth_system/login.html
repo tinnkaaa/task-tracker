@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block title %}🔐 Вхід{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Вхід</h2>
+    <form method="post" class="card p-4 shadow">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Увійти</button>
+    </form>
+</div>
+{% endblock %}

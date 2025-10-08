@@ -58,8 +58,8 @@
             <p class="mb-3"><b>👤 Виконавець:</b> {{ task.assignee|default:"Не призначено" }}</p>
 
             <div class="d-flex gap-2">
-                <a href="#" class="btn btn-outline-secondary">✏ Редагувати</a>
-                <a href="#" class="btn btn-outline-danger">🗑 Видалити</a>
+                <a href="{% url 'task-update' task.pk %}" class="btn btn-outline-secondary">✏ Редагувати</a>
+                <a href="{% url 'task-delete' task.pk %}" class="btn btn-outline-danger">🗑 Видалити</a>
                 <a href="{% url 'task-list' %}" class="btn btn-outline-dark">⬅ Назад до списку</a>
             </div>
         </div>

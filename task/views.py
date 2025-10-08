@@ -1,8 +1,9 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
-from django.views.generic import ListView, CreateView, UpdateView, DetailView
+from django.views.generic import ListView, CreateView, UpdateView, DetailView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
+from . import forms
 from .models import Task
 from .forms import TaskForm
 
@@ -33,7 +34,6 @@ class TaskCreateView(LoginRequiredMixin, CreateView):
     form_class = TaskForm
     template_name = "tasks/task_form.html"
     success_url = reverse_lazy("task-list")
-    login_url = reverse_lazy("admin:login")
 
     def form_valid(self, form):
         task = form.save(commit=False)
@@ -65,3 +65,14 @@ def task_complete(request, pk):
         task.status = "done" if task.is_completed else "todo"
         task.save()
     return redirect("task-list")
+
+class TaskUpdateView(LoginRequiredMixin, UpdateView):
+    model = Task
+    form_class = forms.TaskForm
+    template_name = ("tasks/task_form.html")
+    success_url = reverse_lazy("task-list")
+
+class TaskDeleteView(LoginRequiredMixin, DeleteView):
+    model = Task
+    template_name = "tasks/task_delete.html"
+    success_url = reverse_lazy("task-list")

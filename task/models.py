@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.conf import settings
 
 class Task(models.Model):
     STATUS_CHOICES = [
@@ -22,7 +22,7 @@ class Task(models.Model):
     priority = models.CharField(choices=PRIORITY_CHOICES, max_length=20, default="low")
     is_completed = models.BooleanField(default=False)
 
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
     def save(self, *args, **kwargs):
         if self.is_completed:
@@ -33,3 +33,4 @@ class Task(models.Model):
 
     def __str__(self):
         return self.title
+
