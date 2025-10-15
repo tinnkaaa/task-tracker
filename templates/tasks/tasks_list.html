@@ -55,8 +55,8 @@
 
                 <div class="card-footer bg-white border-0 text-center">
                     <a href="{% url 'task-detail' task.id %}" class="btn btn-outline-primary btn-sm">🔎 Деталі</a>
-                    <a href="#" class="btn btn-outline-secondary btn-sm">✏ Редагувати</a>
-                    <a href="#" class="btn btn-outline-danger btn-sm">🗑 Видалити</a>
+                    <a href="{% url 'task-update' task.id %}" class="btn btn-outline-secondary btn-sm">✏ Редагувати</a>
+                    <a href="{% url 'task-delete' task.id %}" class="btn btn-outline-danger btn-sm">🗑 Видалити</a>
                 </div>
             </div>
         </div>
