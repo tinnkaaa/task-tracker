@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block title %}Редагувати коментар{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card shadow-lg border-0">
+        <div class="card-body">
+            <h4 class="fw-bold mb-3">✏ Редагування коментаря</h4>
+
+            <form method="post">
+                {% csrf_token %}
+                {{ form.content }}
+                <button type="submit" class="btn btn-success">💾 Зберегти</button>
+                <a href="{{ comment.task.get_absolute_url }}" class="btn btn-outline-secondary">⬅ Відмінити</a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

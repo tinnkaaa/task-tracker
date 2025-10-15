@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+from auth_system.models import CustomUser
 
 class Task(models.Model):
     STATUS_CHOICES = [
@@ -34,3 +35,28 @@ class Task(models.Model):
     def __str__(self):
         return self.title
 
+class Comment(models.Model):
+    task = models.ForeignKey(Task, on_delete=models.CASCADE, related_name="comments")
+    author = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="comments")
+    content = models.TextField("Текст коментаря")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Коментар від {self.author} до {self.task.title}"
+
+    @property
+    def likes_count(self):
+        return self.likes.count()
+
+    class Meta:
+        ordering = ['-created_at']
+
+class CommentLike(models.Model):
+    comment = models.ForeignKey(Comment, on_delete=models.CASCADE, related_name="likes")
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+
+    class Meta:
+        unique_together = ('comment', 'user')
+
+    def __str__(self):
+        return f"{self.user} лайкнув {self.comment.id}"

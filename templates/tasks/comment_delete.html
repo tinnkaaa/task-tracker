@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block title %}Видалити коментар{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card shadow-lg border-0">
+        <div class="card-body">
+            <h4 class="fw-bold mb-3">🗑 Видалення коментаря</h4>
+            <p>Ви дійсно хочете видалити цей коментар?</p>
+            <p class="mb-3"><b>Текст коментаря:</b> {{ comment.content }}</p>
+
+            <form method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">🗑 Видалити</button>
+                <a href="{{ comment.task.get_absolute_url }}" class="btn btn-outline-secondary">⬅ Відмінити</a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
