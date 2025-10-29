@@ -22,6 +22,7 @@ class Task(models.Model):
     status = models.CharField(choices=STATUS_CHOICES, max_length=20, default="todo")
     priority = models.CharField(choices=PRIORITY_CHOICES, max_length=20, default="low")
     is_completed = models.BooleanField(default=False)
+    file = models.FileField(upload_to='media_comments', null=True, blank=True)
 
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
@@ -40,6 +41,7 @@ class Comment(models.Model):
     author = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="comments")
     content = models.TextField("Текст коментаря")
     created_at = models.DateTimeField(auto_now_add=True)
+    media = models.FileField(upload_to='media_comments', null=True, blank=True)
 
     def __str__(self):
         return f"Коментар від {self.author} до {self.task.title}"

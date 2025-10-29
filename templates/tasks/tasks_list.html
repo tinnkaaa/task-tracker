@@ -7,10 +7,26 @@
     <a href="{% url 'task-create' %}" class="btn btn-success">➕ Нова задача</a>
 </div>
 
-<div class="row g-3">
+<div class="row g-4">
     {% for task in tasks %}
         <div class="col-md-4">
-            <div class="card shadow border-0 h-100">
+            <div class="card shadow-sm h-100 border-0">
+
+                {% if task.file %}
+                    {% with task.file.url|lower as file_url %}
+                        {% if ".jpg" in file_url or ".jpeg" in file_url or ".png" in file_url or ".gif" in file_url %}
+                            <img src="{{ task.file.url }}" class="card-img-top rounded-top" alt="{{ task.title }}" style="height: 180px; object-fit: cover;">
+                        {% elif ".mp4" in file_url or ".mov" in file_url or ".webm" in file_url %}
+                            <video controls class="card-img-top rounded-top" style="height: 180px; object-fit: cover;">
+                                <source src="{{ task.file.url }}" type="video/mp4">
+                                Ваш браузер не підтримує відео.
+                            </video>
+                        {% else %}
+                            <a href="{{ task.file.url }}" target="_blank" class="d-block mt-2">📄 Завантажити файл</a>
+                        {% endif %}
+                    {% endwith %}
+                {% endif %}
+
                 <div class="card-body">
                     <h5 class="card-title fw-bold">{{ task.title }}</h5>
 
@@ -30,6 +46,14 @@
                     </form>
 
                     <p class="card-text text-muted small">{{ task.description|truncatewords:15 }}</p>
+
+                    {% if task.file %}
+                        <div class="mb-2">
+                            <a href="{{ task.file.url }}" target="_blank" class="text-decoration-none">
+                                <i class="bi bi-paperclip"></i> {{ task.file.name|slice:":20" }}{% if task.file.name|length > 20 %}...{% endif %}
+                            </a>
+                        </div>
+                    {% endif %}
 
                     <div class="mb-2">
                         <span class="badge

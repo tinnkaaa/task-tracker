@@ -34,7 +34,7 @@ class TaskDetailView(LoginRequiredMixin, UserTaskMixin, DetailView):
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
-        form = CommentForm(request.POST)
+        form = CommentForm(request.POST, request.FILES)
         if form.is_valid():
             comment = form.save(commit=False)
             comment.task = self.object
@@ -54,10 +54,8 @@ class TaskCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     success_message = "✅ Задачу успішно створено!"
 
     def form_valid(self, form):
-        task = form.save(commit=False)
-        task.user = self.request.user
-        task.status = "done" if form.cleaned_data.get("is_completed") else "todo"
-        task.save()
+        form.instance.user = self.request.user
+        form.instance.status = "done" if form.cleaned_data.get("is_completed") else "todo"
         return super().form_valid(form)
 
 
@@ -100,10 +98,17 @@ class CommentDeleteView(LoginRequiredMixin, DeleteView):
 @login_required(login_url='login')
 def task_create(request):
     if request.method == "POST":
-        form = TaskForm(request.POST)
+        form = TaskForm(request.POST, request.FILES)
         if form.is_valid():
             task = form.save(commit=False)
             task.user = request.user
+            task.status = "done" if form.cleaned_data.get("is_completed") else "todo"
+            
+            # Handle file upload
+            if 'file' in request.FILES:
+                task.file = request.FILES['file']
+                print(f"File received: {task.file.name} ({task.file.size} bytes)")
+            
             task.save()
             messages.success(request, "✅ Задачу успішно створено!")
             return redirect("task-list")

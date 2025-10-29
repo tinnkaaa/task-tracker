@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load widget_tweaks %}
 {% block title %}Створити задачу{% endblock %}
 
 {% block content %}
@@ -8,8 +9,9 @@
 </div>
 
 <div class="card shadow-sm border-0 p-4">
-    <form method="POST">
+    <form method="POST" enctype="multipart/form-data">
         {% csrf_token %}
+
         <div class="mb-3">
             {{ form.title.label_tag }}
             {{ form.title|add_class:"form-control" }}
@@ -35,6 +37,11 @@
             {{ form.is_completed.label_tag }}
         </div>
 
+        <div class="mb-3">
+            {{ form.file.label_tag }}
+            {{ form.file|add_class:"form-control" }}
+            <small class="form-text text-muted">📎 Прикріпити файл (необов’язково)</small>
+        </div>
         <button type="submit" class="btn btn-success">💾 Зберегти</button>
     </form>
 </div>
