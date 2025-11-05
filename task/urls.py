@@ -2,6 +2,7 @@ from django.urls import path
 from .views import TaskListViews, TaskDetailView, TaskCreateView, task_complete, TaskUpdateView, TaskDeleteView, CommentUpdateView, CommentDeleteView, toggle_like
 
 urlpatterns = [
+    path("", TaskListViews.as_view(), name="task-list"),
     path("tasks/", TaskListViews.as_view(), name="task-list"),
     path("<int:pk>/", TaskDetailView.as_view(), name="task-detail"),
     path("comment/<int:pk>/edit/", CommentUpdateView.as_view(), name="comment-edit"),

@@ -57,3 +57,21 @@ class CommentForm(forms.ModelForm):
                 'placeholder': 'Напишіть коментар...'
             }),
         }
+
+class TaskFilterForm(forms.Form):
+    STATUS_CHOICES = [
+        ("all", "ALL"),
+        ("todo", "TO DO"),
+        ("in_progress", "IN PROGRESS"),
+        ("done", "DONE")
+    ]
+
+    PRIORITY_CHOICES = [
+        ("all", "ALL"),
+        ("low", "LOW"),
+        ("medium", "MEDIUM"),
+        ("high", "HIGH")
+    ]
+
+    status = forms.ChoiceField(choices=STATUS_CHOICES, required=False, label="Статус", initial="all", widget=forms.Select(attrs={'class': 'form-select'}))
+    priority = forms.ChoiceField(choices=PRIORITY_CHOICES, required=False, label="Пріоритет", initial="all", widget=forms.Select(attrs={'class': 'form-select'}))

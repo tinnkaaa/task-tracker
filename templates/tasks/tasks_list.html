@@ -7,6 +7,22 @@
     <a href="{% url 'task-create' %}" class="btn btn-success">➕ Нова задача</a>
 </div>
 
+<form method="get" class="row g-3 mb-4">
+    <div class="container my-3">
+        <div class="row align-items-center">
+            <div class="col-md-8">
+                <form method="GET" class="d-flex justify-content-end align-items-center gap-2">
+                    {{ filter_form.status.label_tag }}
+                    {{ filter_form.status }}
+                    {{ filter_form.priority.label_tag }}
+                    {{ filter_form.priority }}
+                    <button type="submit" class="btn btn-primary">Фільтрувати</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</form>
+
 <div class="row g-4">
     {% for task in tasks %}
         <div class="col-md-4">

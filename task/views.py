@@ -5,6 +5,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
+from . import forms
 from .models import Task, Comment, CommentLike
 from .forms import TaskForm, CommentForm
 from .mixins import UserTaskMixin, SuccessMessageMixin
@@ -16,8 +17,21 @@ class TaskListViews(LoginRequiredMixin, ListView):
     ordering = ["-created_at"]
     login_url = reverse_lazy("login")
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['filter_form'] = forms.TaskFilterForm(self.request.GET)
+        return context
+
     def get_queryset(self):
-        return Task.objects.filter(user=self.request.user).order_by("-created_at")
+        queryset = super().get_queryset()
+        status = self.request.GET.get("status")
+        priority = self.request.GET.get("priority")
+        if status != "all":
+            queryset = queryset.filter(status=status)
+        if priority != "all":
+            queryset = queryset.filter(priority=priority)
+
+        return queryset
 
 
 class TaskDetailView(LoginRequiredMixin, UserTaskMixin, DetailView):
@@ -93,6 +107,7 @@ class CommentDeleteView(LoginRequiredMixin, DeleteView):
 
     def test_func(self):
         return self.get_object().author == self.request.user
+
 
 
 @login_required(login_url='login')
